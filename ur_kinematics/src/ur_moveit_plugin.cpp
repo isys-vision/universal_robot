@@ -96,63 +96,12 @@ namespace ur_kinematics
 
   URKinematicsPlugin::URKinematicsPlugin():active_(false) {}
 
-void URKinematicsPlugin::getRandomConfiguration(KDL::JntArray &jnt_array, bool lock_redundancy) const
-{
-  std::vector<double> jnt_array_vector(dimension_, 0.0);
-  state_->setToRandomPositions(joint_model_group_);
-  state_->copyJointGroupPositions(joint_model_group_, &jnt_array_vector[0]);
-  for (std::size_t i = 0; i < dimension_; ++i)
-  {
-    if (lock_redundancy)
-      if (isRedundantJoint(i))
-        continue;
-    jnt_array(i) = jnt_array_vector[i];
-  }
-}
-
 bool URKinematicsPlugin::isRedundantJoint(unsigned int index) const
 {
   for (std::size_t j=0; j < redundant_joint_indices_.size(); ++j)
     if (redundant_joint_indices_[j] == index)
       return true;
   return false;
-}
-
-void URKinematicsPlugin::getRandomConfiguration(const KDL::JntArray &seed_state,
-                                                 const std::vector<double> &consistency_limits,
-                                                 KDL::JntArray &jnt_array,
-                                                 bool lock_redundancy) const
-{
-  std::vector<double> values(dimension_, 0.0);
-  std::vector<double> near(dimension_, 0.0);
-  for (std::size_t i = 0 ; i < dimension_; ++i)
-    near[i] = seed_state(i);
-
-  // Need to resize the consistency limits to remove mimic joints
-  std::vector<double> consistency_limits_mimic;
-  for(std::size_t i = 0; i < dimension_; ++i)
-  {
-    if(!mimic_joints_[i].active)
-      continue;
-    consistency_limits_mimic.push_back(consistency_limits[i]);
-  }
-
-  joint_model_group_->getVariableRandomPositionsNearBy(state_->getRandomNumberGenerator(), values, near, consistency_limits_mimic);
-  
-  for (std::size_t i = 0; i < dimension_; ++i)
-  {
-    bool skip = false;
-    if (lock_redundancy)
-      for (std::size_t j = 0; j < redundant_joint_indices_.size(); ++j)
-        if (redundant_joint_indices_[j] == i)
-        {
-          skip = true;
-          break;
-        }
-    if (skip)
-      continue;
-    jnt_array(i) = values[i];
-  }
 }
 
 bool URKinematicsPlugin::checkConsistency(const KDL::JntArray& seed_state,
