@@ -194,11 +194,9 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
   }
 
   // Get Solver Parameters
-  int max_solver_iterations;
   double epsilon;
   bool position_ik;
 
-  lookupParam("max_solver_iterations", max_solver_iterations, 500);
   lookupParam("epsilon", epsilon, 1e-5);
   lookupParam(group_name+"/position_only_ik", position_ik, false);
 
@@ -265,8 +263,6 @@ bool URKinematicsPlugin::initialize(const std::string &robot_description,
   // Store things for when the set of redundant joints may change
   position_ik_ = position_ik;
   joint_model_group_ = joint_model_group;
-  max_solver_iterations_ = max_solver_iterations;
-  epsilon_ = epsilon;
 
   lookupParam("arm_prefix", arm_prefix_, std::string(""));
 
