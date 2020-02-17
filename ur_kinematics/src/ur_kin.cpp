@@ -42,6 +42,16 @@ namespace ur_kinematics {
     const double d5 =  0.08535;
     const double d6 =  0.0819;
     #endif
+
+    //#define UR3E_PARAMS
+    #ifdef UR3E_PARAMS
+    const double d1 =  0.15185;
+    const double a2 = -0.24355;
+    const double a3 = -0.2132;
+    const double d4 =  0.13105;
+    const double d5 =  0.08535;
+    const double d6 =  0.0921;
+    #endif
   }
 
   void forward(const double* q, double* T) {
