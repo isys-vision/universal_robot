@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.14.0)
 project(ur_kinematics)
 
 find_package(catkin REQUIRED COMPONENTS roscpp geometry_msgs moveit_core moveit_kinematics
   moveit_ros_planning pluginlib tf_conversions)
 
-find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost CONFIG REQUIRED)
 
 catkin_python_setup()
 
